@@ -13,6 +13,11 @@ class _SurveyScreenState extends State<SurveyScreen> {
   String? selectedPeople;
   String otherAllergy = '';
   String otherHealthConcern = '';
+  String? selectedGender;
+  TextEditingController ageController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  String? selectedActivityLevel;
 
   // Method to handle allergy selection
   void _onAllergySelected(String value) {
@@ -55,6 +60,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
         selectedGoal = value;
       } else if (type == "people") {
         selectedPeople = value;
+      } else if (type == "gender") {
+        selectedGender = value;
       }
     });
   }
@@ -92,158 +99,67 @@ class _SurveyScreenState extends State<SurveyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Welcome to What's In My Food!",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                _buildSection(
+                  title: "Welcome to What's In My Food!",
+                  subtitle:
+                      "Let's get you started towards a healthier life! 🥗",
                 ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Let's get you started towards a healthier life!",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
+                _buildTextFieldSection(
+                    "What should we call you?", "Enter your name"),
+                _buildRadioSection("What gender do you identify with?",
+                    ["Male", "Female", "Other"], "gender"),
+                _buildTextFieldSection("What is your age?", "Enter your age",
+                    controller: ageController, inputType: TextInputType.number),
+                _buildHeightAndWeightSection(),
+                _buildDropdownSection("What is your activity level?",
+                    ['Low', 'Medium', 'High'], "activity level"),
+                _buildCheckboxSection(
+                    "Can you tell us about any allergies you may have?",
+                    [
+                      "Peanuts",
+                      "Shellfish",
+                      "Milk",
+                      "Eggs",
+                      "Wheat",
+                      "Other (please specify)"
+                    ],
+                    selectedAllergies),
+                _buildCheckboxSection(
+                    "What are some health issues that concern you?",
+                    [
+                      "Heart Disease",
+                      "Diabetes",
+                      "High Blood Pressure",
+                      "Obesity",
+                      "PCOD/PCOS",
+                      "Other (please specify)"
+                    ],
+                    selectedHealthConcerns),
                 const SizedBox(height: 30),
-                const Text("What should we call you?",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: "Enter your name",
-                    fillColor: Colors.white.withOpacity(0.8),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                const Text("Can you tell us about any allergies you may have?",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
-                Column(
-                  children: [
-                    _buildCheckBoxOption('Peanuts', selectedAllergies),
-                    _buildCheckBoxOption('Shellfish', selectedAllergies),
-                    _buildCheckBoxOption('Milk', selectedAllergies),
-                    _buildCheckBoxOption('Eggs', selectedAllergies),
-                    _buildCheckBoxOption('Wheat', selectedAllergies),
-                    _buildCheckBoxOption(
-                        'Other (please specify)', selectedAllergies),
-                    // Show text field for "Other" allergy
-                    if (selectedAllergies.contains('Other (please specify)'))
-                      TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            otherAllergy = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Please specify",
-                          fillColor: Colors.white.withOpacity(0.8),
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text("What are some health issues that concern you?",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
-                Column(
-                  children: [
-                    _buildCheckBoxOption(
-                        'Heart Disease', selectedHealthConcerns),
-                    _buildCheckBoxOption('Diabetes', selectedHealthConcerns),
-                    _buildCheckBoxOption(
-                        'High Blood Pressure', selectedHealthConcerns),
-                    _buildCheckBoxOption('Obesity', selectedHealthConcerns),
-                    _buildCheckBoxOption('Cancer', selectedHealthConcerns),
-                    _buildCheckBoxOption(
-                        'Other (please specify)', selectedHealthConcerns),
-                    // Show text field for "Other" health concern
-                    if (selectedHealthConcerns
-                        .contains('Other (please specify)'))
-                      TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            otherHealthConcern = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          hintText: "Please specify",
-                          fillColor: Colors.white.withOpacity(0.8),
-                          filled: true,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text("What are your goals with this app?",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
-                Column(
-                  children: [
-                    _buildRadioOption('Eating Green', "goal"),
-                    _buildRadioOption('Less Unhealthy Food', "goal"),
-                    _buildRadioOption('Eating Safer and More Organic', "goal"),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Text("How many people do you live with/shop for?",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black)),
-                Column(
-                  children: [
-                    _buildRadioOption('0', "people"),
-                    _buildRadioOption('1', "people"),
-                    _buildRadioOption('2', "people"),
-                    _buildRadioOption('3', "people"),
-                    _buildRadioOption('4', "people"),
-                    _buildRadioOption('5', "people"),
-                  ],
-                ),
-                const SizedBox(height: 40),
                 Center(
-                  child: SizedBox(
-                    width: 250,
-                    height: 60,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        // Handle survey submission (navigate or save data)
-                      },
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.black, width: 2),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Submit survey data
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white, // Background color
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 18, horizontal: 60), // Elongated button
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(30), // Rounded corners
+                        side: const BorderSide(
+                            color: Colors.black, width: 2), // Black outline
                       ),
-                      child: const Text(
-                        "Submit Survey",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
+                      shadowColor: Colors.transparent, // Removed shadow
+                      elevation: 0, // No shadow elevation
+                    ),
+                    child: const Text(
+                      "Submit",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black, // Text color
                       ),
                     ),
                   ),
@@ -256,33 +172,262 @@ class _SurveyScreenState extends State<SurveyScreen> {
     );
   }
 
-  Widget _buildCheckBoxOption(String text, List<String> selectedOptions) {
-    return CheckboxListTile(
-      title: Text(text, style: const TextStyle(color: Colors.black)),
-      value: selectedOptions.contains(text),
-      onChanged: (bool? newValue) {
-        setState(() {
-          if (newValue == true) {
-            selectedOptions.add(text);
-          } else {
-            selectedOptions.remove(text);
-          }
-        });
-      },
-      controlAffinity: ListTileControlAffinity.leading,
-      activeColor: Colors.green,
-      checkColor: Colors.white,
+  Widget _buildSection({required String title, required String subtitle}) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            subtitle,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildRadioOption(String text, String type) {
-    return RadioListTile<String>(
-      title: Text(text, style: const TextStyle(color: Colors.black)),
-      value: text,
-      groupValue: type == "goal" ? selectedGoal : selectedPeople,
-      onChanged: (String? value) {
-        _onRadioSelected(value, type);
-      },
+  Widget _buildTextFieldSection(String label, String hintText,
+      {TextEditingController? controller,
+      TextInputType inputType = TextInputType.text}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hintText,
+              fillColor: Colors.white.withOpacity(0.8),
+              filled: true,
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            keyboardType: inputType,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRadioSection(
+      String label, List<String> options, String groupValue) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          Column(
+            children: options.map((option) {
+              return Row(
+                children: [
+                  Radio<String>(
+                    value: option,
+                    groupValue: selectedGender,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedGender = newValue;
+                      });
+                    },
+                  ),
+                  Text(option),
+                ],
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeightAndWeightSection() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "What is your height?",
+            style: TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: heightController,
+                  decoration: InputDecoration(
+                    hintText: "Feet",
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  controller: weightController,
+                  decoration: InputDecoration(
+                    hintText: "Weight (kg)",
+                    fillColor: Colors.white.withOpacity(0.8),
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDropdownSection(
+      String label, List<String> options, String groupValue) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          DropdownButton<String>(
+            value: selectedActivityLevel,
+            hint: const Text("Select activity level"),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedActivityLevel = newValue;
+              });
+            },
+            items: options.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCheckboxSection(
+      String label, List<String> options, List<String> selectedValues) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(blurRadius: 10, color: Colors.black26)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+          ),
+          Column(
+            children: options.map((option) {
+              return _buildCheckBoxOption(option, selectedValues);
+            }).toList(),
+          ),
+          if (selectedValues.contains('Other (please specify)'))
+            TextField(
+              onChanged: (value) {
+                setState(() {
+                  otherHealthConcern = value;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: "Please specify",
+                fillColor: Colors.white.withOpacity(0.8),
+                filled: true,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCheckBoxOption(String value, List<String> selectedValues) {
+    return Row(
+      children: [
+        Checkbox(
+          value: selectedValues.contains(value),
+          onChanged: (bool? isSelected) {
+            setState(() {
+              isSelected == true
+                  ? selectedValues.add(value)
+                  : selectedValues.remove(value);
+            });
+          },
+        ),
+        Text(value),
+      ],
     );
   }
 }

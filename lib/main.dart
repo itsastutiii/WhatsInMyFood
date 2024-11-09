@@ -53,10 +53,27 @@ class _InitialScreenState extends State<InitialScreen> {
     }
 
     // Navigate based on sign-up status
-    return _isSignedUp!
-        ? MyHomePage(
-            username: 'Cookie',
-          ) // If signed up, navigate to home page
-        : SignUpScreen(); // If not signed up, navigate to sign-up screen
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white, // Set the app bar color to white
+        title: const Text(
+          'App Title',
+          style: TextStyle(color: Colors.black), // Title color for contrast
+        ),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/bg2.png'), // Set background image
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: _isSignedUp!
+            ? MyHomePage(
+                username: 'Cookie',
+              ) // If signed up, navigate to home page
+            : SignUpScreen(), // If not signed up, navigate to sign-up screen
+      ),
+    );
   }
 }
