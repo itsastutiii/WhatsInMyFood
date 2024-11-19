@@ -1,7 +1,9 @@
 # What's in My Food Project Prototype (Under Construction)
 
 Team: OrcaOps
+
 Hackathon: HackWave
+
 Summary: "What’s in My Food" is an AI-powered app designed to empower Indian consumers with transparency about food safety. It scans and analyzes food labels, identifying harmful ingredients, allergens, and regulatory non-compliance, enabling informed dietary decisions.
 
 ## Project Vision
